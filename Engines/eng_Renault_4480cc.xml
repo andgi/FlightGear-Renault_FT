@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+  Renault FT tank "flight" model for JSBSim.
+
+    Copyright (C) 2018  Anders Gidenstam  (anders(at)gidenstam.org)
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+  
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+  
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  
+-->
+<piston_engine name="Renault 4480cc">
+ <documentation>
+   Renault 4480 cubic cm petrol engine.
+ </documentation>
+
+ <displacement unit="CC">4480.00</displacement>
+ <!-- bore unit="M"     ></bore>
+ <stroke unit="M"       ></stroke -->
+ <!-- compression-ratio    >6.30</compression-ratio -->
+
+ <cylinders                >4.00</cylinders>
+ <cycles                   >4.00</cycles>
+
+ <maxhp                   >39.00</maxhp>
+
+ <idlerpm                >300.00</idlerpm>
+ <maxrpm                >1500.00</maxrpm>
+
+ <!-- bsfc unit="LBS/HP*HR">0.37</bsfc -->
+ <!-- volumetric_efficiency><volumetric_efficiency -->
+
+ <sparkfaildrop            >0.00</sparkfaildrop>
+
+ <minmp unit="INHG"       >12.0</minmp>
+ <maxmp unit="INHG"       >28.5</maxmp>
+
+ <minthrottle>0.10</minthrottle>
+ <maxthrottle>1.00</maxthrottle>
+
+</piston_engine>

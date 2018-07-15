@@ -1,0 +1,704 @@
+<?xml version="1.0"?>
+<!--
+
+  Renault FT tank "flight" model for JSBSim.
+
+    Copyright (C) 2018  Anders Gidenstam  (anders(at)gidenstam.org)
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+-->
+<?xml-stylesheet type="text/xsl" href="http://jsbsim.sourceforge.net/JSBSim.xsl"?>
+<fdm_config name="Renault_FT" version="2.0" release="ALPHA"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:noNamespaceSchemaLocation="http://jsbsim.sourceforge.net/JSBSim.xsd">
+
+ <fileheader>
+  <author>Anders Gidenstam</author>
+  <email>anders at gidenstam dot org</email>
+
+  <filecreationdate>2018-06-30</filecreationdate>
+  <version>2018-07-11</version>
+
+  <description>Models a Renault FT tank.</description>
+
+  <license>
+   <licenseName>GPL</licenseName>
+   <licenseURL>http://www.gnu.org/licenses/gpl.html</licenseURL>
+  </license>
+  <note>
+   This model was created using publicly available data, publicly available
+   technical reports, textbooks, and guesses. It contains no proprietary or
+   restricted data. It has been validated only to the extent that it may seem
+   to "fly right", and possibly to comply to published, publicly known, 
+   performance data (maximum speed, endurance, etc.).
+
+   This model is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+  </note>
+
+  <reference refID="Goutay:1922:FT"
+             author="Lieutenant Goutay"
+             title="Manuel pratique du char Renault"
+             date="1922"/>
+
+ </fileheader>
+
+ <documentation>
+  The origin of the structural frame is in the middle of the center line between
+  the centers of the idler wheels. See the 3d model.
+ </documentation>
+
+ <metrics>
+  <wingarea unit="FT2">     1510.0000  </wingarea> <!-- FIXME: update these -->
+  <wingspan unit="FT">       114.0000  </wingspan>
+  <chord unit="FT">           16.4583  </chord>
+  <htailarea unit="FT2">     226.6750  </htailarea>
+  <htailarm unit="FT">        12.2147  </htailarm>
+  <vtailarea unit="FT2">     319.0423  </vtailarea>
+  <vtailarm unit="FT">        17.2533  </vtailarm>
+   <location name="AERORP" unit="M">
+    <x>2.00</x>
+    <y>0.00</y>
+    <z>0.00</z>
+   </location>
+   <location name="EYEPOINT" unit="M">
+    <x>0.70 </x>
+    <y>0.00 </y>
+    <z>0.60 </z>
+   </location>
+   <location name="VRP" unit="M">
+    <x>-0.52</x>
+    <y >0.00</y>
+    <z>-0.67</z>
+   </location>
+ </metrics>
+
+ <mass_balance>
+  <documentation>
+   Information from ([Goutay:1922:FT])
+     Length:       4.10 m, 5.00 m with tail
+     Mass:         6700 kg (char canon)
+                   6500 kg (char mitrailleuse)
+                   both battle ready (by guess)
+     Mass of parts:
+      Fuel 95 litre      87 kg
+      Crew             2x85 kg
+      Cannon            110 kg [https://fr.wikipedia.org/wiki/37_mm_SA_18]
+      225x 37x94mmR       ? kg (>= 112.5 kg, probably wo. casing and propellant)
+      Armor (density ~7.86g/cm^3)
+        Berliet turret  500 kg (0.064m^3 volume, measured in Blender)
+        Body           1800 kg (14.55 m^2 area and 16 mm assumed)
+  </documentation>
+  <documentation>
+    Rough model to estimate CG and inertia tensor.
+
+    % Steiners theorem:
+    % Ixx = \bar{Ixx} + m sqrt(\bar{y}^2 + \bar{z}^2)
+    % Ixy = \bar{Ixy} + m \bar{x} \bar{y}
+
+    % The body is a uniform 4.00x1.00x0.70 meter box.
+    % CG at (2.0, 0, 0.2)) m.
+    m_hull = 6700 - 86.5 - 2*85 - 500 - 110 - 225 % KG
+    a = 2.50      % m
+    b = 1.00      % m
+    c = 0.70      % m
+
+    Ixx_hull = 1/12 * m_hull * (b^2 + c^2)
+    Iyy_hull = 1/12 * m_hull * (a^2 + c^2)
+    Izz_hull = 1/12 * m_hull * (a^2 + b^2)
+    Ixy_hull = Ixz_hull = Iyz_hull = 0
+
+    Ixx = Ixx_hull
+    Iyy = Iyy_hull
+    Izz = Izz_hull
+    Ixy = Ixy_hull
+    Ixz = Ixz_hull
+    Iyz = Iyz_hull
+  </documentation>
+  <ixx unit="KG*M2">696.39</ixx>
+  <iyy unit="KG*M2">3150.1</iyy>
+  <izz unit="KG*M2">3388.5</izz>
+  <emptywt unit="KG" >5608.5</emptywt>
+  <location name="CG" unit="M">
+   <x>2.00</x>
+   <y>0.00</y>
+   <z>0.20</z>
+  </location>
+
+  <documentation>
+   Adjustable payload pointmasses.
+  </documentation>
+
+  <pointmass name="Driver"> <!-- n=0 -->
+   <location unit="M">
+    <x>0.50</x>
+    <y>0.00</y>
+    <z>0.20</z>
+   </location>
+   <weight unit="KG">85.00</weight>
+  </pointmass>
+  <pointmass name="Commander"> <!-- n=1 -->
+   <location unit="M">
+    <x>1.23</x>
+    <y>0.00</y>
+    <z>1.00</z>
+   </location>
+   <weight unit="KG">85.00</weight>
+  </pointmass>
+
+  <pointmass name="Ammunition left-side"> <!-- n=2 -->
+   <location unit="M">
+    <x >1.35</x>
+    <y>-0.40</y>
+    <z >0.30</z>
+   </location>
+   <weight unit="KG">100.00</weight>
+  </pointmass>
+  <pointmass name="Ammunition right-side"> <!-- n=3 -->
+   <location unit="M">
+    <x>1.35</x>
+    <y>0.40</y>
+    <z>0.30</z>
+   </location>
+   <weight unit="KG">100.00</weight>
+  </pointmass>
+
+  <!-- Fixed weights. -->
+  <pointmass name="Turret"> <!-- n=0 -->
+   <location unit="M">
+    <x>1.23</x>
+    <y>0.00</y>
+    <z>1.00</z>
+   </location>
+   <weight unit="KG">500.00</weight>
+  </pointmass>
+  <pointmass name="Armament"> <!-- n=1 -->
+   <location unit="M">
+    <x>1.23</x>
+    <y>0.00</y>
+    <z>1.00</z>
+   </location>
+   <weight unit="KG">110.00</weight>
+  </pointmass>
+
+ </mass_balance>
+
+ <ground_reactions>
+  <documentation>
+   [Goutay:1922:FT] and drawings.
+
+   There are 4 bogeys with road wheels (the first with 3 and the rest with 2)
+   on each side. Each bogey is represented by one "BOGEY" type landing gear.
+   The suspension according to [Goutay:1922:FT] consists of two blade springs
+   on each side (2 bogeys on each). The front blade spring is of 1200 kg
+   capacity and the rear of 1800 kg.
+
+   Guessing that the blade spring is fully compressed at 0.5 cm this gives
+   spring constants of
+     front bogeys  117720.0 N/m
+     rear bogeys   176580.0 N/m
+  </documentation>
+
+  <contact type="BOGEY" name="Left idle wheel 1">
+   <location unit="M">
+    <x>-0.31</x>
+    <y>-0.69</y>
+    <z>-0.41</z>
+   </location>
+   <static_friction >0.70</static_friction>
+   <dynamic_friction>0.60</dynamic_friction>
+   <rolling_friction>0.30</rolling_friction>
+   <spring_coeff unit="N/M"     >120000.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >50000.0</damping_coeff>
+   <max_steer unit="DEG">0</max_steer>
+   <brake_group>LEFT</brake_group>
+   <retractable>0</retractable>
+  </contact>
+  <contact type="BOGEY" name="Right idle wheel 1">
+   <location unit="M">
+    <x>-0.31</x>
+    <y >0.69</y>
+    <z>-0.41</z>
+   </location>
+   <static_friction >0.70</static_friction>
+   <dynamic_friction>0.60</dynamic_friction>
+   <rolling_friction>0.30</rolling_friction>
+   <spring_coeff unit="N/M"     >120000.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >50000.0</damping_coeff>
+   <max_steer unit="DEG">0</max_steer>
+   <brake_group>RIGHT</brake_group>
+   <retractable>0</retractable>
+  </contact>
+  <contact type="BOGEY" name="Left idle wheel 2">
+   <location unit="M">
+    <x >0.00</x>
+    <y>-0.69</y>
+    <z>-0.53</z>
+   </location>
+   <static_friction >0.70</static_friction>
+   <dynamic_friction>0.60</dynamic_friction>
+   <rolling_friction>0.30</rolling_friction>
+   <spring_coeff unit="N/M"     >120000.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >50000.0</damping_coeff>
+   <max_steer unit="DEG">0</max_steer>
+   <brake_group>LEFT</brake_group>
+   <retractable>0</retractable>
+  </contact>
+  <contact type="BOGEY" name="Right idle wheel 2">
+   <location unit="M">
+    <x >0.00</x>
+    <y >0.69</y>
+    <z>-0.53</z>
+   </location>
+   <static_friction >0.70</static_friction>
+   <dynamic_friction>0.60</dynamic_friction>
+   <rolling_friction>0.30</rolling_friction>
+   <spring_coeff unit="N/M"     >120000.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >50000.0</damping_coeff>
+   <max_steer unit="DEG">0</max_steer>
+   <brake_group>RIGHT</brake_group>
+   <retractable>0</retractable>
+  </contact>
+
+  <contact type="BOGEY" name="Left first bogey">
+   <location unit="M">
+    <x >0.67</x>
+    <y>-0.69</y>
+    <z>-0.67</z>
+   </location>
+   <static_friction >0.70</static_friction>
+   <dynamic_friction>0.60</dynamic_friction>
+   <rolling_friction>0.30</rolling_friction>
+   <spring_coeff unit="N/M"     >117720.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >50000.0</damping_coeff>
+   <max_steer unit="DEG">0</max_steer>
+   <brake_group>LEFT</brake_group>
+   <retractable>0</retractable>
+  </contact>
+  <contact type="BOGEY" name="Right first bogey">
+   <location unit="M">
+    <x >0.67</x>
+    <y >0.69</y>
+    <z>-0.67</z>
+   </location>
+   <static_friction >0.70</static_friction>
+   <dynamic_friction>0.60</dynamic_friction>
+   <rolling_friction>0.30</rolling_friction>
+   <spring_coeff unit="N/M"     >117720.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >50000.0</damping_coeff>
+   <max_steer unit="DEG">0</max_steer>
+   <brake_group>RIGHT</brake_group>
+   <retractable>0</retractable>
+  </contact>
+
+  <contact type="BOGEY" name="Left second bogey">
+   <location unit="M">
+    <x >1.43</x>
+    <y>-0.69</y>
+    <z>-0.67</z>
+   </location>
+   <static_friction >0.70</static_friction>
+   <dynamic_friction>0.60</dynamic_friction>
+   <rolling_friction>0.30</rolling_friction>
+   <spring_coeff unit="N/M"     >117720.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >50000.0</damping_coeff>
+   <max_steer unit="DEG">0</max_steer>
+   <brake_group>LEFT</brake_group>
+   <retractable>0</retractable>
+  </contact>
+  <contact type="BOGEY" name="Right second bogey">
+   <location unit="M">
+    <x >1.43</x>
+    <y >0.69</y>
+    <z>-0.67</z>
+   </location>
+   <static_friction >0.70</static_friction>
+   <dynamic_friction>0.60</dynamic_friction>
+   <rolling_friction>0.30</rolling_friction>
+   <spring_coeff unit="N/M"     >117720.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >50000.0</damping_coeff>
+   <max_steer unit="DEG">0</max_steer>
+   <brake_group>RIGHT</brake_group>
+   <retractable>0</retractable>
+  </contact>
+
+  <contact type="BOGEY" name="Left third bogey">
+   <location unit="M">
+    <x >1.94</x>
+    <y>-0.69</y>
+    <z>-0.67</z>
+   </location>
+   <static_friction >0.70</static_friction>
+   <dynamic_friction>0.60</dynamic_friction>
+   <rolling_friction>0.30</rolling_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+   <max_steer unit="DEG">0</max_steer>
+   <brake_group>LEFT</brake_group>
+   <retractable>0</retractable>
+  </contact>
+  <contact type="BOGEY" name="Right third bogey">
+   <location unit="M">
+    <x >1.94</x>
+    <y >0.69</y>
+    <z>-0.67</z>
+   </location>
+   <static_friction >0.70</static_friction>
+   <dynamic_friction>0.60</dynamic_friction>
+   <rolling_friction>0.30</rolling_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+   <max_steer unit="DEG">0</max_steer>
+   <brake_group>RIGHT</brake_group>
+   <retractable>0</retractable>
+  </contact>
+
+  <contact type="BOGEY" name="Left fourth bogey">
+   <location unit="M">
+    <x >2.46</x>
+    <y>-0.69</y>
+    <z>-0.67</z>
+   </location>
+   <static_friction >0.70</static_friction>
+   <dynamic_friction>0.60</dynamic_friction>
+   <rolling_friction>0.30</rolling_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+   <max_steer unit="DEG">0</max_steer>
+   <brake_group>LEFT</brake_group>
+   <retractable>0</retractable>
+  </contact>
+  <contact type="BOGEY" name="Right fourth bogey">
+   <location unit="M">
+    <x >2.46</x>
+    <y >0.69</y>
+    <z>-0.67</z>
+   </location>
+   <static_friction >0.70</static_friction>
+   <dynamic_friction>0.60</dynamic_friction>
+   <rolling_friction>0.30</rolling_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+   <max_steer unit="DEG">0</max_steer>
+   <brake_group>RIGHT</brake_group>
+   <retractable>0</retractable>
+  </contact>
+
+  <contact type="STRUCTURE" name="Body side left 1">
+   <location unit="M">
+    <x >1.23</x>
+    <y>-0.54</y>
+    <z >0.83</z>
+   </location>
+   <static_friction >0.50</static_friction>
+   <dynamic_friction>0.40</dynamic_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="Body side right 1">
+   <location unit="M">
+    <x >1.23</x>
+    <y >0.54</y>
+    <z >0.83</z>
+   </location>
+   <static_friction >0.50</static_friction>
+   <dynamic_friction>0.40</dynamic_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+  </contact>
+
+  <contact type="STRUCTURE" name="Turret side left">
+   <location unit="M">
+    <x >1.23</x>
+    <y>-0.41</y>
+    <z >1.37</z>
+   </location>
+   <static_friction >0.50</static_friction>
+   <dynamic_friction>0.40</dynamic_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="Turret side right">
+   <location unit="M">
+    <x >1.23</x>
+    <y >0.41</y>
+    <z >1.37</z>
+   </location>
+   <static_friction >0.50</static_friction>
+   <dynamic_friction>0.40</dynamic_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+  </contact>
+
+  <contact type="STRUCTURE" name="Body side left 2">
+   <location unit="M">
+    <x >2.67</x>
+    <y>-0.49</y>
+    <z >0.83</z>
+   </location>
+   <static_friction >0.50</static_friction>
+   <dynamic_friction>0.40</dynamic_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="Body side right 2">
+   <location unit="M">
+    <x >2.67</x>
+    <y >0.49</y>
+    <z >0.83</z>
+   </location>
+   <static_friction >0.50</static_friction>
+   <dynamic_friction>0.40</dynamic_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+  </contact>
+
+  <contact type="STRUCTURE" name="Body rear 1 left">
+   <location unit="M">
+    <x >3.38</x>
+    <y>-0.28</y>
+    <z>-0.23</z>
+   </location>
+   <static_friction >0.50</static_friction>
+   <dynamic_friction>0.40</dynamic_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="Body rear 1 right">
+   <location unit="M">
+    <x >3.38</x>
+    <y >0.28</y>
+    <z>-0.23</z>
+   </location>
+   <static_friction >0.50</static_friction>
+   <dynamic_friction>0.40</dynamic_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+  </contact>
+
+  <contact type="STRUCTURE" name="Body rear 2 left">
+   <location unit="M">
+    <x >3.58</x>
+    <y>-0.15</y>
+    <z>-0.10</z>
+   </location>
+   <static_friction >0.50</static_friction>
+   <dynamic_friction>0.40</dynamic_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="Body rear 2 right">
+   <location unit="M">
+    <x >3.58</x>
+    <y >0.15</y>
+    <z>-0.10</z>
+   </location>
+   <static_friction >0.50</static_friction>
+   <dynamic_friction>0.40</dynamic_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+  </contact>
+
+  <contact type="STRUCTURE" name="Tail 1">
+   <location unit="M">
+    <x >4.00</x>
+    <y >0.00</y>
+    <z >0.05</z>
+   </location>
+   <static_friction >0.50</static_friction>
+   <dynamic_friction>0.40</dynamic_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="Tail 2">
+   <location unit="M">
+    <x >4.48</x>
+    <y >0.00</y>
+    <z >0.51</z>
+   </location>
+   <static_friction >0.50</static_friction>
+   <dynamic_friction>0.40</dynamic_friction>
+   <spring_coeff unit="N/M"     >176580.0</spring_coeff>
+   <damping_coeff unit="N/M/SEC" >75000.0</damping_coeff>
+  </contact>
+
+ </ground_reactions>
+
+ <propulsion>
+  <documentation>
+  </documentation>
+  <!--
+  === Engine ================================================
+  -->
+  <!-- Main engine -->
+  <engine file="eng_Renault_4480cc">
+   <location unit="M">
+    <x>3.00</x>
+    <y>0.00</y>
+    <z>0.10</z>
+   </location>
+   <orient unit="DEG">
+    <roll >0.0</roll>
+    <pitch>0.0</pitch>
+    <yaw  >0.0</yaw>
+   </orient>
+   <feed>0</feed>
+   <thruster file="prop_Renault_FT">
+    <location unit="M">
+     <x>3.00</x>
+     <y>0.00</y>
+     <z>0.10</z>
+    </location>
+    <orient unit="DEG">
+     <roll >0.0</roll>
+     <pitch>0.0</pitch>
+     <yaw  >0.0</yaw>
+    </orient>
+   </thruster>
+  </engine>
+
+  <!--
+  === Fuel tanks ============================================
+  -->
+  <documentation>
+   95 liters.
+  </documentation>
+
+  <tank type="FUEL">
+   <location unit="M">
+    <x>2.00</x>
+    <y>0.00</y>
+    <z>0.50</z>
+   </location>
+   <type>AVGAS</type>
+   <capacity unit="KG">86.5</capacity>
+   <contents unit="KG">86.5</contents>
+  </tank>
+
+ </propulsion>
+
+ <external_reactions>
+
+  <documentation>
+  </documentation>
+
+  <force name="track[0]" frame="BODY" unit="LBS">
+   <location unit="M">
+    <!-- x >0.67</x>
+    <y>-0.69</y>
+    <z>-0.67</z -->
+    <x >2.853</x>
+    <y>-0.690</y>
+    <z>-0.154</z>
+   </location>
+   <direction>
+    <x>1.0</x>
+    <y>0.0</y>
+    <z>0.0</z>
+   </direction>
+  </force>
+  <force name="track[1]" frame="BODY" unit="LBS">
+   <location unit="M">
+    <!-- x >0.67</x>
+    <y >0.69</y>
+    <z>-0.67</z -->
+    <x >2.853</x>
+    <y >0.690</y>
+    <z>-0.154</z>
+   </location>
+   <direction>
+    <x>1.0</x>
+    <y>0.0</y>
+    <z>0.0</z>
+   </direction>
+  </force>
+
+ </external_reactions>
+
+ <system name="propulsion">
+  <property value="1.0">propulsion/selected-gear-factor</property>
+  <channel name="no engine model">
+
+   <!-- Temporary system that just sets the track forces. -->
+   <fcs_function name="propulsion/track[0]/thrust-lbs">
+    <function>
+     <product>
+      <lt>
+       <property>fcs/left-brake-cmd-norm</property>
+       <value>0.1</value>
+      </lt>
+      <property>propulsion/selected-gear-factor</property>
+      <table>
+       <independentVar lookup="row">fcs/throttle-cmd-norm</independentVar>
+        <tableData>
+         0.0     0.0
+         1.0  5000.0
+        </tableData>
+      </table>
+     </product>
+    </function>
+    <output>external_reactions/track[0]/magnitude</output>
+   </fcs_function>
+   <fcs_function name="propulsion/track[1]/thrust-lbs">
+    <function>
+     <product>
+      <lt>
+       <property>fcs/right-brake-cmd-norm</property>
+       <value>0.1</value>
+      </lt>
+      <property>propulsion/selected-gear-factor</property>
+      <table>
+       <independentVar lookup="row">fcs/throttle-cmd-norm</independentVar>
+        <tableData>
+         0.0     0.0
+         1.0  5000.0
+        </tableData>
+      </table>
+     </product>
+    </function>
+    <output>external_reactions/track[1]/magnitude</output>
+   </fcs_function>
+
+  </channel>
+
+ </system>
+
+ <aerodynamics>
+
+  <axis name="DRAG"> <!-- FIXME! -->
+
+   <!-- Wild guess: D = K A q_inf -->
+   <!-- A = cross sectional area (ft^2); -->
+   <function name="aero/force/D_hull">
+    <description>Drag</description>
+    <product>
+     <property>aero/qbar-psf</property>
+     <value> 0.0 </value>
+     <!-- Start CD -->
+     <value> 0.5 </value>
+     <product>  <!-- Increase drag with beta. -->
+      <value>5.0</value>
+      <abs><sin><property>aero/beta-rad</property></sin></abs>
+     </product>
+    </product>
+   </function>
+  </axis>
+
+ </aerodynamics>
+
+</fdm_config>

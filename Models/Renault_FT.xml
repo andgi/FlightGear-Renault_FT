@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+  Renault FT tank for FlightGear.
+
+  Copyright (C) 2018  Anders Gidenstam  (anders(at)gidenstam.org)
+  This file is licensed under the GPL license version 2 or later.
+-->
+<PropertyList>
+
+ <path>Renault_FT.ac</path>
+ <offsets>
+  <!-- x/y/z == back/right/up -->
+  <x-m> 0.0 </x-m>
+  <y-m> 0.0 </y-m>
+  <z-m> 0.0 </z-m>
+ </offsets>
+
+ <!-- Turret animation =====================================================-->
+ <animation>
+  <type>select</type>
+  <object-name>turretB</object-name>
+  <condition>
+   <property>sim/model/has-berliot-turret</property>
+  </condition>
+ </animation>
+ <animation>
+  <type>rotate</type>
+  <object-name>turretB</object-name>
+  <object-name>turretB.obs.lid</object-name>
+  <property>sim/model/turret-rotation-deg</property>
+  <factor>1.0</factor>
+  <axis>
+   <!-- x/y/z == back/right/up -->
+   <x1-m>1.750</x1-m>
+   <y1-m>0.000</y1-m>
+   <z1-m>0.000</z1-m>
+   <x2-m>1.750</x2-m>
+   <y2-m>0.000</y2-m>
+   <z2-m>1.508</z2-m>
+  </axis>
+ </animation>
+
+</PropertyList>

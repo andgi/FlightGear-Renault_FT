@@ -1,0 +1,246 @@
+<?xml version="1.0"?>
+<!--
+  Renault FT tank for FlightGear.
+
+  Copyright (C) 2018  Anders Gidenstam  (anders(at)gidenstam.org)
+  This file is licensed under the GPL license version 2 or later.
+-->
+<PropertyList>
+
+ <sim>
+
+  <description>Renault FT tank</description>
+  <author>Anders Gidenstam</author>
+  <aircraft-version>2018-07-15</aircraft-version>
+
+  <long-description>
+  </long-description>
+
+  <tags>
+   <tag>piston</tag>
+   <tag>single-engine</tag>
+   <tag>ww1</tag>
+   <tag>1920s</tag>
+   <tag>1930s</tag>
+  </tags>
+
+  <status type="string">alpha</status>
+  <rating>
+   <FDM type="int">0</FDM>
+   <systems type="int">0</systems>
+   <cockpit type="int">0</cockpit>
+   <model type="int">1</model>
+  </rating>
+
+  <flight-model>jsb</flight-model>
+  <aero>Renault_FT</aero>
+  <!-- model-hz type="double">120.0</model-hz -->
+
+  <!-- startup>
+   <splash-texture>Aircraft/Renault_FT/splash.png</splash-texture>
+  </startup -->
+
+  <!-- 3d model -->
+  <model>
+   <path>Aircraft/Renault_FT/Models/Renault_FT.xml</path>
+   <!-- livery>
+    <file type="string">Nordstern</file>
+    </livery -->
+   <has-berliot-turret type="double">1</has-berliot-turret>
+  </model>
+
+  <!-- Views -->
+  <view n="0">
+   <!-- Driver's position. -->
+   <name>Driver View</name>
+   <internal>true</internal>
+   <config>
+    <!-- x/y/z == right/up/back -->
+    <x-offset-m type="double">0.00</x-offset-m>
+    <y-offset-m type="double">1.31</y-offset-m>
+    <z-offset-m type="double">1.42</z-offset-m>
+    <pitch-offset-deg type="double">0.0</pitch-offset-deg>
+   </config>
+  </view>
+  <!-- Views -->
+  <view n="100">
+   <!-- Commander's position. -->
+   <name>Commander View</name>
+   <internal>true</internal>
+   <config>
+    <!-- x/y/z == right/up/back -->
+    <from-model type="bool">true</from-model>
+    <from-model-idx type="int">0</from-model-idx>
+    <x-offset-m type="double">0.00</x-offset-m>
+    <y-offset-m type="double">1.87</y-offset-m>
+    <z-offset-m type="double">2.02</z-offset-m>
+    <pitch-offset-deg type="double">0.0</pitch-offset-deg>
+    <default-field-of-view-deg type="double">65</default-field-of-view-deg>
+   </config>
+  </view>
+
+  <!-- Move the center of the external views. -->
+  <view n="1">
+   <config>
+    <target-y-offset-m type="double">1.0</target-y-offset-m>
+    <target-z-offset-m type="double">2.0</target-z-offset-m>
+   </config>
+  </view>
+  <view n="2">
+   <config>
+    <target-y-offset-m type="double">1.0</target-y-offset-m>
+    <target-z-offset-m type="double">2.0</target-z-offset-m>
+   </config>
+  </view>
+  <view n="3">
+   <config>
+    <target-y-offset-m type="double">1.0</target-y-offset-m>
+    <target-z-offset-m type="double">2.0</target-z-offset-m>
+   </config>
+  </view>
+  <view n="5">
+   <config>
+    <target-y-offset-m type="double">1.0</target-y-offset-m>
+    <target-z-offset-m type="double">2.0</target-z-offset-m>
+   </config>
+  </view>
+  <view n="6">
+   <config>
+    <target-y-offset-m type="double">1.0</target-y-offset-m>
+    <target-z-offset-m type="double">2.0</target-z-offset-m>
+   </config>
+  </view>
+
+  <chase-distance-m type="double">-15.0</chase-distance-m>
+
+  <!-- sound>
+   <audible>true</audible>
+   <path>Aircraft/Renault_FT/Sounds/sound.xml</path>
+  </sound -->
+
+  <!-- Aircraft specific help. -->
+  <!-- help include="help.xml"/ -->
+
+  <systems>
+   <electrical>
+    <path/>
+   </electrical>
+   <autopilot>
+    <path/>
+   </autopilot>
+  </systems>
+
+  <!-- instrumentation>
+   <path>Aircraft/Nordstern/Systems/instrumentation.xml</path>
+  </instrumentation -->
+
+  <multiplay>
+   <generic>
+    <!-- float n="0" alias="/fdm/jsbsim/propulsion/engine[0]/pitch-angle-rad"/>
+    <float n="1"
+           alias="/instrumentation/attitude-indicator/indicated-roll-deg"/ -->
+    <!-- int n="0" type="int">0</int -->         <!-- MP switches 1 -->
+    <!-- string n="0" type="string"></string --> <!-- MP events -->
+    <!-- string n="1" type="string"></string --> <!-- MP TDM1 -->
+    <!-- string n="2" type="string"></string --> <!-- MP TDM2 -->
+    <!-- string n="3" type="string"></string --> <!-- MP TDM3 -->
+   </generic>
+  </multiplay>
+
+  <max-simtime-per-frame n="0" type="double">0.1</max-simtime-per-frame>
+
+  <!-- menubar>
+   <default>
+    <menu n="100">
+     <label>Renault FT</label>
+     <item>
+      <label>About</label>
+      <binding>
+       <command>nasal</command>
+       <script>NordsternRenault_FT.about();</script>
+      </binding>
+     </item>
+     <item>
+      <label>Select Livery</label>
+      <binding>
+       <command>nasal</command>
+       <script>aircraft.livery.dialog.toggle()</script>
+      </binding>
+     </item>
+    </menu>
+   </default>
+  </menubar -->
+ </sim>
+
+ <instrumentation>
+ </instrumentation>
+
+ <controls>
+  <lighting>
+  </lighting>
+ </controls>
+
+ <!-- payload include="Systems/payload.xml"/>
+ <consumables include="Systems/consumables.xml"/ -->
+
+ <nasal>
+  <RenaultFT>
+    <script><![CDATA[
+###############################################################################
+# Disable terrain modelling.
+setprop("sim/fdm/surface/override-level", 1);
+
+# On-screen displays
+var left  = screen.display.new(20, 10);
+var right = screen.display.new(-300, 10);
+
+left.add("/fdm/jsbsim/sim-time-sec");
+left.add("/orientation/heading-magnetic-deg");
+#left.add("/fdm/jsbsim/");
+#left.add("/fdm/jsbsim/");
+
+right.add("/fdm/jsbsim/velocities/u-fps");
+right.add("/fdm/jsbsim/velocities/v-fps");
+right.add("/fdm/jsbsim/velocities/w-fps");
+right.add("/fdm/jsbsim/propulsion/track[0]/thrust-lbs");
+right.add("/fdm/jsbsim/propulsion/track[1]/thrust-lbs");
+#right.add("/fdm/jsbsim/");
+
+###############################################################################
+   ]]>
+   </script>
+  </RenaultFT>
+ </nasal>
+
+ <input>
+  <keyboard>
+   <!-- Keyboard commands -->
+
+   <!-- Gearbox commands ====================================== -->
+   <key n="82">
+    <name>R</name>
+    <desc>Toggle reverse gear.</desc>
+    <binding>
+     <command>property-cycle</command>
+     <property>/fdm/jsbsim/propulsion/selected-gear-factor</property>
+     <value>1.0</value>
+     <value>-1.0</value>
+    </binding>
+   </key>
+
+  </keyboard>
+ </input>
+
+ <!--
+   Force the type and initial value of the aliased JSBSim control properties.
+   JSBSim does not write default values to properties that it finds already
+   exist even though they are of undefined type, as e.g. when created by
+   aliases. Setting the default values here allow them to be overriden from
+   the command line.
+ -->
+ <fdm>
+  <jsbsim>
+  </jsbsim>
+ </fdm>
+
+</PropertyList>
